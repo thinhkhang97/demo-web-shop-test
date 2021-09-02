@@ -9,25 +9,29 @@ public class PageHeader extends Component {
 
     final private By headerLogoSel = By.cssSelector("div.header-logo > a > img");
 
-    final private HeaderLinks headerLinks;
-
-    final private HeaderSearchBar headerSearchBar;
-
-    public PageHeader(WebDriver driver) {
-        super(driver);
-        this.headerLinks = new HeaderLinks(driver);
-        this.headerSearchBar = new HeaderSearchBar(driver);
-    }
-
     public WebElement headerLogo() {
         return this.driver.findElement(headerLogoSel);
     }
 
-    public WebElement headerLinkItem(String name) {
-        return this.headerLinks.getHeaderLink(name);
+    public HeaderLinks headerLinks() {
+        return new HeaderLinks(this.driver);
     }
 
-    public HeaderSearchBar getHeaderSearchBar() {
-        return this.headerSearchBar;
+    public HeaderSearchBar headerSearchBar() {
+        return new HeaderSearchBar(this.driver);
     }
+
+    public HeaderMenu headerMenu() {
+        return new HeaderMenu(this.driver);
+    }
+
+    public WebElement headerLinkItem(String name) {
+        return this.headerLinks().getHeaderLink(name);
+    }
+
+    public PageHeader(WebDriver driver) {
+        super(driver);
+    }
+
+
 }

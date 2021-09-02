@@ -3,6 +3,7 @@ package pageTest;
 import models.pages.Home;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 import java.util.List;
 
@@ -17,12 +18,17 @@ public class HomeTest {
         this.homePage = new Home("http://demowebshop.tricentis.com/", driver);
     }
 
-    private void testInputSearchText(String key) {
-        this.homePage.pageHeader().getHeaderSearchBar().input().sendKeys(key);
-//        this.homePage.pageHeader().getHeaderSearchBar().searchButton().click();
+    private void testInputSearchText() {
+        String key = "Nguyen Thinh Khang";
+        System.out.println("TEST SEARCH BAR WITH KEY: " + key);
+
+        this.homePage.pageHeader().headerSearchBar().input().sendKeys(key);
+        this.homePage.pageHeader().headerSearchBar().searchButton().click();
     }
 
     private void testHeaderLinkHasCorrectHref() {
+        System.out.println("TEST HEADER LINKS HAVE CORRECT HREF LINKS");
+
         WebElement registerItem = this.homePage.pageHeader().headerLinkItem("register");
         System.out.println("href: " + registerItem.getAttribute("href"));
 
@@ -36,6 +42,33 @@ public class HomeTest {
         System.out.println("href: " + wishListItem.getAttribute("href"));
     }
 
+    private void testHeaderMenuItems() {
+        System.out.println("TEST HEADER MENU ITEMS CONTENT");
+        List<WebElement> menuItemList = this.homePage.pageHeader().headerMenu().headerMenuItems();
+        this.printContentOfWebElementList(menuItemList);
+    }
+
+    private void testHeaderMenuSubItem() {
+        System.out.println("TEST HEADER MENU SUB-ITEMS");
+        WebElement computerItem = this.homePage.pageHeader().headerMenu().computerItem();
+        WebElement electricItem = this.homePage.pageHeader().headerMenu().electronicItem();
+
+        System.out.println("MOVE MOUSE TO COMPUTER ELEMENT");
+        Actions action = new Actions(this.driver);
+        action.moveToElement(computerItem).perform();
+
+        System.out.println("COMPUTER SUB ITEMS");
+        List<WebElement> computerSubItems = this.homePage.pageHeader().headerMenu().computerSubItems();
+        this.printContentOfWebElementList(computerSubItems);
+
+        System.out.println("MOVE MOUSE TO ELECTRIC ELEMENT");
+        action.moveToElement(electricItem).perform();
+
+        System.out.println("ELECTRONIC SUB ITEMS");
+        List<WebElement> electronicSubItems = this.homePage.pageHeader().headerMenu().electronicSubItems();
+        this.printContentOfWebElementList(electronicSubItems);
+    }
+
     private void printContentOfWebElementList(List<WebElement> webElements) {
         for (WebElement item : webElements
         ) {
@@ -44,6 +77,8 @@ public class HomeTest {
     }
 
     private void testFooterMenuItems() {
+        System.out.println("TEST FOOTER MENU BAR ITEMS");
+
         List<WebElement> informationMenuItems = this.homePage.pageFooter().footerMenuInformation().informationItems();
         System.out.println("Title: " + this.homePage.pageFooter().footerMenuInformation().informationColumnTitle().getText());
         printContentOfWebElementList(informationMenuItems);
@@ -67,15 +102,15 @@ public class HomeTest {
         System.out.println("Open link: " + this.homePage.getUrl());
         this.driver.get(this.homePage.getUrl());
 
-        System.out.println("TEST HEADER LINKS HAVE CORRECT HREF LINKS");
         this.testHeaderLinkHasCorrectHref();
 
-        String key = "Nguyen Thinh Khang";
-        System.out.println("TEST SEARCH BAR WITH KEY: " + key);
-        this.testInputSearchText(key);
-
-        System.out.println("TEST FOOTER MENU BAR ITEMS");
         this.testFooterMenuItems();
+
+        this.testHeaderMenuItems();
+
+        this.testHeaderMenuSubItem();
+
+        this.testInputSearchText();
     }
 
 
